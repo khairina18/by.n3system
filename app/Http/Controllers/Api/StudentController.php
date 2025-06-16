@@ -4,50 +4,65 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvoicePaidMail;
+use App\Models\Student;
+use App\Models\Invoice;
 
 class StudentController extends Controller
 {
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string',
-        'age' => 'required|string',
-        'subject' => 'required|string',
-        'type' => 'required|string',
-        'schedule' => 'required|string',
-        'email' => 'required|email',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'age' => 'required|string',
+            'subject' => 'required|string',
+            'type' => 'required|string',
+            'schedule' => 'required|string',
+            'email' => 'required|email',
+            'amount' => 'required|numeric',
+        ]);
 
-    $student = \App\Models\Student::create([
-        'name' => $request->name,
-        'age' => $request->age,
-        'subject' => $request->subject,
-        'type' => $request->type,
-        'schedule' => $request->schedule,
-        'parent_email' => $request->email,
-    ]);
+        // Save Student
+        $student = Student::create([
+            'name' => $request->name,
+            'age' => $request->age,
+            'subject' => $request->subject,
+            'type' => $request->type,
+            'schedule' => $request->schedule,
+            'parent_email' => $request->email,
+        ]);
 
-    return response()->json([
-        'message' => 'Student added successfully!',
-        'student' => $student,
-        'invoice' => $invoice,
-    ], 201);
-}
+        //  Create Invoice
+        $invoice = Invoice::create([
+            'student_id' => $student->id,
+            'amount' => $request->amount,
+            'status' => 'Paid',
+        ]);
 
-public function myClasses(Request $request)
-{
-    $email = $request->query('email');
+        // Send Email to Parent
+        Mail::to($request->email)->send(new InvoicePaidMail($invoice));
 
-    if (!$email) {
-        return response()->json(['message' => 'Email is required'], 400);
+        // Return response
+        return response()->json([
+            'message' => 'Student registered and invoice sent successfully!',
+            'student' => $student,
+            'invoice' => $invoice,
+        ], 201);
     }
 
-    $students = \App\Models\Student::where('parent_email', $email)
-        ->latest()
-        ->get();
+    public function myClasses(Request $request)
+    {
+        $email = $request->query('email');
 
-    return response()->json($students);
-}
+        if (!$email) {
+            return response()->json(['message' => 'Email is required'], 400);
+        }
 
+        $students = Student::where('parent_email', $email)
+            ->latest()
+            ->get();
 
+        return response()->json($students);
+    }
 }

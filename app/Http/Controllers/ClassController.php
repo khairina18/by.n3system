@@ -24,7 +24,7 @@ class ClassController extends Controller
         $classCodeOptions = config('classcodes');
 
         $request->validate([
-            'code' => 'required|in:' . implode(',', array_keys($classCodeOptions)),
+            'code' => 'required|unique:classes,code|in:' . implode(',', array_keys($classCodeOptions)),
         ]);
 
         $classDetails = $classCodeOptions[$request->code];
@@ -78,17 +78,17 @@ class ClassController extends Controller
         $subject = $request->subject;
         $type = $request->type;
 
-        // Example hardcoded logic — replace with DB lookup if needed
-        if ($type === 'Group') {
-            $fee = 30;
-        } elseif ($type === 'One-to-One') {
-            $fee = 60;
-        } else {
-            return response()->json(['fee' => null], 404);
+        $class = \App\Models\Classes::where('subject', $subject)
+            ->where('type_of_class', $type)
+            ->first();
+
+        if ($class) {
+            return response()->json(['fee' => $class->fee_per_hour]);
         }
 
-        return response()->json(['fee' => $fee]);
+        return response()->json(['fee' => null], 404);
     }
+
     public function getFormOptions()
 {
     $subjects = Classes::select('subject')->distinct()->pluck('subject');

@@ -51,10 +51,12 @@
                 document.getElementById('subject').value = classCodeMap[selectedCode]['subject'];
                 document.getElementById('age').value = classCodeMap[selectedCode]['age'];
                 document.getElementById('type_of_class').value = classCodeMap[selectedCode]['type_of_class'];
+                document.querySelector('[name="fee_per_hour"]').value = classCodeMap[selectedCode]['fee_per_hour'];
             } else {
                 document.getElementById('subject').value = '';
                 document.getElementById('age').value = '';
                 document.getElementById('type_of_class').value = '';
+                document.querySelector('[name="fee_per_hour"]').value = classCodeMap[selectedCode]['fee_per_hour'];
             }
         }
     </script>
