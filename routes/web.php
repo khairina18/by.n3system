@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AssignScheduleController;
 use App\Http\Controllers\GroupScheduleController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffController;
@@ -39,11 +40,17 @@ Route::get('/invoices/{invoice}/download', [InvoiceController::class, 'download'
     Route::resource('payments', PaymentController::class);
 
     Route::get('/class/{id}/schedules', function($id) {
-    $class = \App\Models\Classes::with('schedules.staff')->findOrFail($id);
-    return $class->schedules;
+        $class = \App\Models\Classes::with('schedules.staff')->findOrFail($id);
+        return $class->schedules;
+    });
 
     Route::get('/payments/{id}/receipt', [PaymentController::class, 'receipt'])->name('payments.receipt');
 
-});
+    Route::prefix('assign_schedule')->group(function () {
+        Route::get('/', [AssignScheduleController::class, 'index'])->name('assign_schedule.index');
+        Route::get('/create', [AssignScheduleController::class, 'create'])->name('assign_schedule.create');
+        Route::post('/store', [AssignScheduleController::class, 'store'])->name('assign_schedule.store');
+    });
+
 
 });

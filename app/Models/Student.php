@@ -12,6 +12,11 @@ class Student extends Model
 {
     return $this->hasMany(Payment::class);
 }
+public function scheduleAssignment()
+{
+    return $this->hasOne(ScheduleAssignment::class);
+}
+
     protected $fillable = ['name', 'email', 'age'];
 
 }

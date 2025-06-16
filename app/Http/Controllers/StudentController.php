@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
          $students = Student::orderBy('id', 'asc')->get();

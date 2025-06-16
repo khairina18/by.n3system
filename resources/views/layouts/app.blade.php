@@ -21,6 +21,7 @@
                 <div class="dropdown-content">
                     <a href="{{ route('group-schedules.index') }}" class="{{ request()->routeIs('group-schedules.*') ? 'active' : '' }}">Group Schedule</a>
                     <a href="{{ route('schedules.index') }}" class="{{ request()->routeIs('schedules.*') ? 'active' : '' }}">One-To-One Schedule</a>
+                    <a href="{{ route('assign_schedule.index') }}" class="{{ request()->routeIs('assign_schedule') ? 'active' : '' }}">Assign Schedule</a>
                 </div>
             </div>
             

@@ -25,7 +25,7 @@ class PaymentIntentController extends Controller
         $intent = PaymentIntent::create([
             'amount' => intval($amount), // in cents
             'currency' => 'myr',
-            'payment_method_types' => ['card'],
+            'automatic_payment_methods' => ['enabled' => true],
         ]);
 
         return response()->json([
