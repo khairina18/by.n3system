@@ -7,7 +7,6 @@
     <table>
         <thead>
             <tr>
-                <th>Date</th>
                 <th>Day</th>
                 <th>Start Time</th>
                 <th>End Time</th>
@@ -19,7 +18,6 @@
         <tbody>
             @forelse ($schedules as $schedule)
                 <tr>
-                    <td>{{ $schedule->date }}</td>
                     <td>{{ $schedule->day }}</td>
                     <td>{{ \Carbon\Carbon::parse($schedule->time)->format('h:i A') }}</td>
                     <td>{{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}</td>

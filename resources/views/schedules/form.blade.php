@@ -3,10 +3,6 @@
     @if(isset($schedule)) @method('PUT') @endif
 
     <div class="form-group"  style="margin-bottom: 15px;">
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" value="{{ old('date', $schedule->date ?? '') }}" required style="width: 100%; padding: 8px;">
-    </div>
-    <div class="form-group"  style="margin-bottom: 15px;">
         <label for="day">Day:</label>
         <input type="day" id="day" name="day" value="{{ old('day', $schedule->day ?? '') }}" readonly required style="width: 100%; padding: 8px;">
     </div>

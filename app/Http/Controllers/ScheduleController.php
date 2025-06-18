@@ -26,7 +26,6 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'date' => 'required|date',
         'day' => 'required',
         'time' => 'required',
         'end_time' => 'required',
@@ -37,11 +36,10 @@ class ScheduleController extends Controller
     ]);
 
      // Extract day from selected date
-    $date = Carbon::parse($request->date);
-    $dayOfWeek = $date->format('l'); // e.g. Monday
+    //$dayOfWeek = $dayOfWeek->format('l'); // e.g. Monday
 
     // Check group session conflicts
-    $conflict = \App\Models\GroupSchedule::where('day', $dayOfWeek)
+    $conflict = \App\Models\GroupSchedule::where('day')
         ->where('staff_id', $request->staff_id)
         ->where(function ($query) use ($request) {
             $query->where('time', '<', $request->end_time)
@@ -55,7 +53,7 @@ class ScheduleController extends Controller
 
     // Save schedule if no conflict
     Schedule::create($request->only([
-        'date', 'day', 'time', 'end_time', 'class_id', 'staff_id'
+         'day', 'time', 'end_time', 'class_id', 'staff_id'
     ]) + ['is_booked' => false]);
 
     return redirect()->route('schedules.index')->with('success', 'Schedule added successfully.');
@@ -74,7 +72,6 @@ class ScheduleController extends Controller
         $schedule = Schedule::findOrFail($id);
 
         $request->validate([
-            'date' => 'required|date',
             'day' => 'required|string',
             'time' => 'required',
             'end_time' => 'required',
@@ -83,7 +80,6 @@ class ScheduleController extends Controller
         ]);
 
         $schedule->update($request->only([
-            'date',
             'day',
             'time',
             'end_time',
